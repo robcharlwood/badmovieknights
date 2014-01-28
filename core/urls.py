@@ -2,8 +2,9 @@ from django.conf.urls import *
 from django.conf import settings
 from core import views
 
-urlpatterns = patterns('',
-    url(r'^$', views.hello_world, name='hello-world'),
+urlpatterns = patterns(
+    '',
+    url(r'^$', views.home_view, name='home'),
 )
 
 if settings.DEBUG:

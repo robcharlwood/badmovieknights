@@ -1,13 +1,11 @@
 from django.views.generic import TemplateView
 
 
-class HelloWorld(TemplateView):
-    template_name = "hello-world.html"
+class HomeView(TemplateView):
+    template_name = "home.html"
 
     def get_context_data(self, **kwargs):
-        context = super(HelloWorld, self).get_context_data(**kwargs)
-        self.request.session['test'] = 'val'
-        context['session_test'] = self.request.session['test']
+        context = super(HomeView, self).get_context_data(**kwargs)
         return context
 
-hello_world = HelloWorld.as_view()
+home_view = HomeView.as_view()
