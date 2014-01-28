@@ -1,5 +1,4 @@
 import os
-import sys
 
 APPENGINE_PRODUCTION = os.getenv('APPENGINE_PRODUCTION')
 
@@ -11,7 +10,7 @@ DEBUG = not APPENGINE_PRODUCTION
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Rob Charlwood', 'robcharlwood@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -38,30 +37,27 @@ SESSION_ENGINE = "appengine_sessions.backends.cached_db"
 
 # Uncomment these DB definitions to use Cloud SQL.
 # See: https://developers.google.com/cloud-sql/docs/django#development-settings
-#import os
-#if (os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine') or
+# if (os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine') or
 #    os.getenv('SETTINGS_MODE') == 'prod'):
 #    # Running on production App Engine, so use a Google Cloud SQL database.
-#    DATABASES = {
-#        'default': {
-#            'ENGINE': 'google.appengine.ext.django.backends.rdbms',
-#            'INSTANCE': 'my_project:instance1',
-#            'NAME': 'my_db',
-#            }
-#        }
-#else:
-#    # Running in development, so use a local MySQL database.
-#    DATABASES = {
-#        'default': {
-#            'ENGINE': 'django.db.backends.sqlite3',
-##            'USER': 'root',
-##            'PASSWORD': '',
-##            'HOST': 'localhost',
-#            'NAME': 'my_db',
-#            }
-#        }
-
-
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'google.appengine.ext.django.backends.rdbms',
+#             'INSTANCE': 'my_project:instance1',
+#             'NAME': 'my_db',
+#         }
+#     }
+# else:
+#     # Running in development, so use a local MySQL database.
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'USER': 'root',
+#             'PASSWORD': '',
+#             'HOST': 'localhost',
+#             'NAME': 'badmovieknights',
+#         }
+#     }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -70,11 +66,11 @@ SESSION_ENGINE = "appengine_sessions.backends.cached_db"
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 SITE_ID = 1
 
@@ -125,7 +121,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -135,7 +130,6 @@ SECRET_KEY = '^(&s11q!@t2j@=dgpp65k+df6o1(@1h9cq-$^p@=k4!5))xi6u'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -148,11 +142,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+TEMPLATE_DIRS = ()
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -163,10 +153,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'core',
     'appengine_sessions',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -199,5 +185,5 @@ LOGGING = {
 }
 
 ALLOWED_HOSTS = [
-    'djappeng1ne-beta.appspot.com'
+    'badmovieknights.appspot.com'
 ]
