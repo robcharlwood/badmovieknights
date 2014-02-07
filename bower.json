@@ -10,10 +10,5 @@
     "badmovieknights" : "git://github.com/robcharlwood/badmovieknights-angularjs#develop"
   },
   "license": "MIT",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "core/static/badmovieknights"
-  ]
+  "private": true
 }
