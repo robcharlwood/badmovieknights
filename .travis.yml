@@ -13,7 +13,7 @@ install:
 
 script:
   - export PYTHONPATH=$PYTHONPATH:${PWD}/google_appengine
-  - coverage run manage.py core appengine_sessions
+  #- coverage run manage.py core appengine_sessions
 
 after_success:
-  - coveralls
+  #- coveralls
