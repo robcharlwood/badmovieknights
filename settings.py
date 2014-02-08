@@ -24,7 +24,7 @@ CACHES = {
 }
 
 # If you are using CloudSQL, you can comment out the next line
-TEST_RUNNER = 'lib.testrunnernodb.TestRunnerNoDb'
+#TEST_RUNNER = 'lib.testrunnernodb.TestRunnerNoDb'
 
 """
 Custom session engine using our cache or writing through to the datastore If
@@ -37,27 +37,27 @@ SESSION_ENGINE = "appengine_sessions.backends.cached_db"
 
 # Uncomment these DB definitions to use Cloud SQL.
 # See: https://developers.google.com/cloud-sql/docs/django#development-settings
-# if (os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine') or
-#    os.getenv('SETTINGS_MODE') == 'prod'):
-#    # Running on production App Engine, so use a Google Cloud SQL database.
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'google.appengine.ext.django.backends.rdbms',
-#             'INSTANCE': 'my_project:instance1',
-#             'NAME': 'my_db',
-#         }
-#     }
-# else:
-#     # Running in development, so use a local MySQL database.
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.mysql',
-#             'USER': 'root',
-#             'PASSWORD': '',
-#             'HOST': 'localhost',
-#             'NAME': 'badmovieknights',
-#         }
-#     }
+if (os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine') or
+   os.getenv('SETTINGS_MODE') == 'prod'):
+   # Running on production App Engine, so use a Google Cloud SQL database.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'google.appengine.ext.django.backends.rdbms',
+            'INSTANCE': 'badmovieknights:swayze',
+            'NAME': 'badmovieknights',
+        }
+    }
+else:
+    # Running in development, so use a local MySQL database.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'USER': 'badmovieknights',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'NAME': 'badmovieknights',
+        }
+    }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
