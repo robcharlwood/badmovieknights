@@ -1,10 +1,16 @@
 import os
+from django.core.urlresolvers import reverse_lazy
 
 APPENGINE_PRODUCTION = os.getenv('APPENGINE_PRODUCTION')
 
 HTTP_HOST = os.environ.get('HTTP_HOST')
 
 PROJDIR = os.path.abspath(os.path.dirname(__file__))
+
+
+# method to return absolute paths
+def absjoin(*args):
+    return os.path.abspath(os.path.join(*args))
 
 DEBUG = not APPENGINE_PRODUCTION
 TEMPLATE_DEBUG = DEBUG
@@ -60,7 +66,7 @@ TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-gb'
+LANGUAGE_CODE = 'en-GB'
 
 SITE_ID = 1
 
@@ -132,7 +138,9 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = ()
+TEMPLATE_DIRS = (
+    absjoin(PROJDIR, "templates"),
+)
 
 INSTALLED_APPS = (
     # django apps
@@ -186,3 +194,6 @@ ALLOWED_HOSTS = [
 
 # turn of migrations when running test suite.
 SOUTH_TESTS_MIGRATE = False
+
+# login settings
+LOGIN_REDIRECT_URL = reverse_lazy('home')
