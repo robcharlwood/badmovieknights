@@ -1,10 +1,15 @@
-from google.appengine.ext import testbed
+# import python deps
 import unittest
 
+# import google deps
+from google.appengine.ext import testbed
 
+
+# Base NoDb tes case
 class NdbTestCase(unittest.TestCase):
-    """ Setup and teardown common to tests involving ndb entities """
-
+    """
+        Setup and teardown common to tests involving ndb entities
+    """
     def setUp(self):
         self.testbed = testbed.Testbed()
         self.testbed.activate()

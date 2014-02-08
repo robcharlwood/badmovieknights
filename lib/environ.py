@@ -1,11 +1,26 @@
+# import python deps
 import os
 import sys
 import logging
 
-ROOT_PATH = os.path.normpath(os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir))
+# google sdk imports
+from dev_appserver import fix_sys_path
+
+# import google deps
+from google.appengine.tools import dev_appserver as tools_dev_appserver
+from google.appengine import dist
+import settings
+from django.core.management import setup_environ
+
+
+# setup paths
+ROOT_PATH = os.path.normpath(
+    os.path.join(os.path.abspath(
+        os.path.dirname(__file__)), os.pardir))
 DATASTORE_PATH = os.path.join(ROOT_PATH, 'tmp', 'data')
 
 
+# method to setup environment
 def setup_environ():
 
     # lib
@@ -17,7 +32,8 @@ def setup_environ():
         if 'dev_appserver.py' in os.listdir(path):
             test_path = os.path.join(path, 'dev_appserver.py')
             sdk_path = os.path.dirname(
-                os.readlink(test_path) if os.path.islink(test_path) else test_path)
+                os.readlink(test_path)
+                if os.path.islink(test_path) else test_path)
             break
 
     if not sdk_path:
@@ -26,11 +42,7 @@ def setup_environ():
     sys.path.insert(0, sdk_path)
 
     # Use dev_appserver to set up the python path
-    from dev_appserver import fix_sys_path
     fix_sys_path()
-
-    from google.appengine.tools import dev_appserver as tools_dev_appserver
-    from google.appengine import dist
 
     # Parse `app.yaml`
     appinfo, url_matcher, from_cache = tools_dev_appserver.LoadAppConfig(
@@ -49,16 +61,17 @@ def setup_environ():
             except ValueError, e:
                 if library.name == 'django' and library.version == '1.4':
                     # Work around an SDK issue
-                    logging.warn('django 1.4 not recognised by dist, fixing python path')
-                    sys.path.insert(0, os.path.join(sdk_path, 'lib', 'django-1.4'))
+                    logging.warn(
+                        'django 1.4 not recognised by dist, fixing '
+                        'python path')
+                    sys.path.insert(0, os.path.join(
+                        sdk_path, 'lib', 'django-1.4'))
                 else:
                     logging('Unsupported library:\n%s\n' % e)
 
             # Extra setup for django
             if library.name == 'django':
                 try:
-                    import settings
-                    from django.core.management import setup_environ
                     setup_environ(settings, original_settings_path='settings')
                 except ImportError:
                     logging.error("Could not import django settings")

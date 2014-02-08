@@ -1,7 +1,9 @@
+# import python deps
 import operator
 import logging
 
-from google.appengine.ext import ndb, deferred
+# import google deps
+from google.appengine.ext import deferred
 from google.appengine.runtime import DeadlineExceededError
 from google.appengine.api.datastore_errors import TransactionFailedError
 
@@ -9,21 +11,24 @@ from google.appengine.api.datastore_errors import TransactionFailedError
 DEFERRED_BATCH_SIZE = 250
 
 
+# query mapper
 class QueryMapper(object):
     """
-    Iterates over an ndb filtered query. Runs iterations in a deferred task.
+        Iterates over an ndb filtered query. Runs iterations in a
+        deferred task.
 
-    If mapping needs to scale, mapreduce should be used instead. We'll need to
-    make that work with ndb.  Start here:
-    http://code.google.com/p/appengine-mapreduce/wiki/UserGuidePython
+        If mapping needs to scale, mapreduce should be used instead.
+        We'll need to make that work with ndb.  Start here:
+        http://code.google.com/p/appengine-mapreduce/wiki/UserGuidePython
 
-    Query and filters are passed into `map` and evaluated in a way that looks
-    strange, but is necessary to keep deferred happy when pickling arguments.
-
-    todo: mock, test.
+        Query and filters are passed into `map` and evaluated in a way
+        that looks strange, but is necessary to keep deferred happy when
+        pickling arguments.
     """
 
-    def __init__(self, model, filters=None, ancestor=None, queue='default', deferred_batch_size=DEFERRED_BATCH_SIZE):
+    def __init__(
+            self, model, filters=None, ancestor=None,
+            queue='default', deferred_batch_size=DEFERRED_BATCH_SIZE):
 
         self.model = model
         self.filters = filters
@@ -46,7 +51,9 @@ class QueryMapper(object):
 
         if self.filters:
             for operator_str, operands in self.filters.iteritems():
-                query = query.filter(getattr(operator, operator_str)(self.model._properties[operands[0]], operands[1]))
+                query = query.filter(getattr(
+                    operator, operator_str)(self.model._properties[
+                        operands[0]], operands[1]))
 
         # Attempt to process an entire batch
         if query.count(self.deferred_batch_size) > 0:
@@ -56,9 +63,6 @@ class QueryMapper(object):
 
             for i, key in enumerate(keys):
                 self.process_key(key)
-
-                # Simulate a deadline exceeded
-                # if i == 10: raise DeadlineExceededError()
 
             # If there are more entities, defer another process
             if more:
@@ -70,16 +74,14 @@ class QueryMapper(object):
 
     def start(self):
         """
-        Don't do anything in a time constrained view. Kick of the first
-        deferred task.
+            Don't do anything in a time constrained view. Kick of the
+            first deferred task.
         """
         deferred.defer(self.map, _queue=self.queue)
 
     def map(self):
-
         try:
             self.transaction()
-
         except (DeadlineExceededError, TransactionFailedError):
             # We ran out of time, or the transaction failed
             deferred.defer(self.map, _queue=self.queue)
@@ -87,9 +89,8 @@ class QueryMapper(object):
 
 class DeleteMapper(QueryMapper):
     """
-    Delete all entities mapped.
+        Delete all entities mapped.
     """
-
     def process_key(self, key):
         # Deleting key
         logging.info('DeleteMapper deleted %s' % str(key))

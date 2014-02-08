@@ -1,12 +1,11 @@
+# import python deps
 import unittest
 
-from google.appengine.api import memcache
-from google.appengine.ext import db
-from google.appengine.ext import testbed
-
+# import test deps
 from ndbtestcase import NdbTestCase
 
 
+# simple test case
 class ATestCase(NdbTestCase):
 
     def setUp(self):

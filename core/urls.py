@@ -1,12 +1,17 @@
+# import django deps
 from django.conf.urls import url, patterns
 from django.conf import settings
-from core import views
 
+# import app deps
+from core.views import home_view
+
+# setup urls
 urlpatterns = patterns(
     '',
-    url(r'^$', views.home_view, name='home'),
+    url(r'^$', home_view, name='home'),
 )
 
+# handle 404s and 500s in development mode
 if settings.DEBUG:
     urlpatterns += patterns(
         '',
