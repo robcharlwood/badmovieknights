@@ -1,5 +1,5 @@
 import os
-from django.core.urlresolvers import reverse_lazy
+#from django.core.urlresolvers import reverse_lazy
 
 APPENGINE_PRODUCTION = os.getenv('APPENGINE_PRODUCTION')
 
@@ -153,6 +153,7 @@ INSTALLED_APPS = (
 
     # projects apps
     'blog',
+    'api',
 
     # third party libs
     'south',
@@ -197,4 +198,6 @@ ALLOWED_HOSTS = [
 SOUTH_TESTS_MIGRATE = False
 
 # login settings
-LOGIN_REDIRECT_URL = reverse_lazy('home')
+#LOGIN_REDIRECT_URL = reverse_lazy('home')
+# redirect to / until we have a home view.
+LOGIN_REDIRECT_URL = '/'
