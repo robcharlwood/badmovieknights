@@ -151,8 +151,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # project apps
-    'core',
+    # projects apps
+    'blog',
 
     # third party libs
     'south',

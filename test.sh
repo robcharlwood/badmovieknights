@@ -1,2 +1,2 @@
 #! /usr/bin/env bash
-python manage.py test core
+python manage.py test blog
