@@ -13,7 +13,7 @@ install:
 
 script:
   - export PATH=${PWD}/google_appengine:$PATH
-  - coverage run manage.py test core appengine_sessions
+  - coverage run --source=core,appengine_sessions manage.py test core appengine_sessions
 
 after_success:
   - coveralls
