@@ -177,3 +177,6 @@ LOGGING = {
 ALLOWED_HOSTS = [
     'badmovieknights.appspot.com'
 ]
+
+# turn of migrations when running test suite.
+SOUTH_TESTS_MIGRATE = False
