@@ -12,7 +12,7 @@ install:
   - pip install coveralls
 
 script:
-  - export PATH=${PWD}/googleappengine:$PATH
+  - export PATH=${PWD}/google_appengine:$PATH
   - coverage run manage.py test core appengine_sessions
 
 after_success:
