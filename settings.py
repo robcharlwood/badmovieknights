@@ -29,7 +29,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 # See: https://developers.google.com/cloud-sql/docs/django#development-settings
 if (os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine') or
    os.getenv('SETTINGS_MODE') == 'prod'):
-   # Running on production App Engine, so use a Google Cloud SQL database.
+    # Running on production App Engine, so use a Google Cloud SQL database.
     DATABASES = {
         'default': {
             'ENGINE': 'google.appengine.ext.django.backends.rdbms',
