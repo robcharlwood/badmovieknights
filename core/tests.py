@@ -2,11 +2,11 @@
 import unittest
 
 # import test deps
-from ndbtestcase import NdbTestCase
+from django.test import TestCase
 
 
 # simple test case
-class ATestCase(NdbTestCase):
+class ATestCase(TestCase):
 
     def setUp(self):
         self.param = 1
