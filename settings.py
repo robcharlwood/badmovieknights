@@ -135,14 +135,20 @@ ROOT_URLCONF = 'urls'
 TEMPLATE_DIRS = ()
 
 INSTALLED_APPS = (
+    # django apps
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # project apps
     'core',
+
+    # third party libs
     'south',
+    'rest_framework',
 )
 
 # A sample logging configuration. The only tangible logging
