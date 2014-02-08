@@ -23,11 +23,12 @@ engine_modules = {
     'doj.backends.zxjdbc.postgresql': 'postgresql_psycopg2', #django-jython
     'doj.backends.zxjdbc.mysql': 'mysql', #django-jython
     'doj.backends.zxjdbc.oracle': 'oracle', #django-jython
+    'google.appengine.ext.django.backends.rdbms': 'mysql',  # google app engine
 }
 
 # First, work out if we're multi-db or not, and which databases we have
-try: 
-    from django.db import DEFAULT_DB_ALIAS 
+try:
+    from django.db import DEFAULT_DB_ALIAS
 except ImportError:
     #### 1.1 or below ####
     # We'll 'fake' multi-db; set the default alias
@@ -78,6 +79,6 @@ except ImportError:
         ) % (module_name,)
     )
     sys.exit(1)
-    
+
 # Finally, to make old migrations work, keep 'db' around as the default database
 db = dbs[DEFAULT_DB_ALIAS]
