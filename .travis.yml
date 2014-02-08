@@ -13,6 +13,7 @@ install:
 
 script:
   - export PYTHONPATH=$PYTHONPATH:google_appengine
+  - echo $PYTHONPATH
   - coverage run manage.py test core appengine_sessions
 
 after_success:
