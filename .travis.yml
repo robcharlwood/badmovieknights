@@ -7,13 +7,15 @@ python:
 before_script:
   - wget https://googleappengine.googlecode.com/files/google_appengine_1.8.9.zip -nv
   - unzip -q google_appengine_1.8.9.zip
+  - mysql -e 'create database badmovieknights;'
 
 install:
   - pip install coveralls
+  - pip install MySQL-python
 
 script:
   - export PATH=${PWD}/google_appengine:$PATH
-  - coverage run --omit="*/test*" --source=core,appengine_sessions manage.py test core appengine_sessions
+  - coverage run --omit="*/test*" --source=core,appengine_sessions manage.py test core appengine_sessions --settings=badmovieknights.travis_settings
 
 after_success:
   - coveralls
