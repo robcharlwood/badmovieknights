@@ -23,14 +23,7 @@ CACHES = {
     }
 }
 
-"""
-Custom session engine using our cache or writing through to the datastore If
-using SQL, can we use django's standard write through?  If gae memecached is
-stable enough, it would be faster to use
-django.contrib.sessions.backends.cache?
-"""
-
-SESSION_ENGINE = "appengine_sessions.backends.cached_db"
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
 # Uncomment these DB definitions to use Cloud SQL.
 # See: https://developers.google.com/cloud-sql/docs/django#development-settings
@@ -149,7 +142,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'appengine_sessions',
 )
 
 # A sample logging configuration. The only tangible logging
