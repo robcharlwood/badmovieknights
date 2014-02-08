@@ -1,8 +1,0 @@
-{
-  "name": "badmovieknights-api",
-  "description": "Bad Movie Knights Django back end",
-  "repository": "https://github.com/robcharlwood/badmovieknights",
-  "devDependencies": {
-    "bower": "~1.2.8"
-  }
-}

@@ -39,7 +39,3 @@ skip_files:
 - ^(.*/)?.*\.py[co]
 - ^(.*/)?\..*
 - tmp
-- node_modules
-- .bowerrc
-- package.json
-- bower.json
