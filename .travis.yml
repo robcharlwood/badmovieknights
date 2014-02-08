@@ -15,4 +15,5 @@ script:
   - export PYTHONPATH=$PYTHONPATH:google_appengine
   - coverage run manage.py core appengine_sessions
 
-after_success: coveralls
+after_success:
+  - coveralls
