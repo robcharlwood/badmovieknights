@@ -3,16 +3,6 @@ import os
 import sys
 import logging
 
-# google sdk imports
-from dev_appserver import fix_sys_path
-
-# import google deps
-from google.appengine.tools import dev_appserver as tools_dev_appserver
-from google.appengine import dist
-import settings
-from django.core.management import setup_environ
-
-
 # setup paths
 ROOT_PATH = os.path.normpath(
     os.path.join(os.path.abspath(
@@ -42,9 +32,11 @@ def setup_environ():
     sys.path.insert(0, sdk_path)
 
     # Use dev_appserver to set up the python path
+    from dev_appserver import fix_sys_path
     fix_sys_path()
 
     # Parse `app.yaml`
+    from google.appengine.tools import dev_appserver as tools_dev_appserver
     appinfo, url_matcher, from_cache = tools_dev_appserver.LoadAppConfig(
         ROOT_PATH, {}, default_partition='dev')
     app_id = appinfo.application
@@ -56,6 +48,7 @@ def setup_environ():
     # Third party libraries on the path
     if appinfo.libraries:
         for library in appinfo.libraries:
+            from google.appengine import dist
             try:
                 dist.use_library(library.name, library.version)
             except ValueError, e:
@@ -72,6 +65,8 @@ def setup_environ():
             # Extra setup for django
             if library.name == 'django':
                 try:
+                    from django.core.management import setup_environ
+                    import settings
                     setup_environ(settings, original_settings_path='settings')
                 except ImportError:
                     logging.error("Could not import django settings")

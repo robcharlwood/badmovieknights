@@ -7,9 +7,6 @@ import logging
 import subprocess
 from lib.environ import setup_environ
 
-# import django deps
-from django.core.management import execute_from_command_line
-
 # setup environment
 setup_environ()
 
@@ -28,4 +25,5 @@ if 'shell' in sys.argv:
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+    from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
