@@ -170,6 +170,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     # projects apps
+    'core',
     'blog',
     'api',
 

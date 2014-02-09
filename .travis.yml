@@ -12,10 +12,11 @@ before_script:
 install:
   - pip install coveralls
   - pip install MySQL-python
+  - pip install mock
 
 script:
   - export PATH=${PWD}/google_appengine:$PATH
-  - coverage run --omit="*/test*" --source=blog,api manage.py test blog api --settings=badmovieknights.travis_settings
+  - coverage run --omit="*/test*" --source=core,blog,api manage.py test core blog api --settings=badmovieknights.travis_settings
 
 after_success:
   - coveralls
