@@ -5,9 +5,15 @@ from django.conf import settings
 # set up urls
 urlpatterns = patterns(
     '',
+
+    # enable the bad movie knights api
     url(r'^api/', include('api.urls', namespace='badmovieknights_api')),
+
+    # enable session and token auth urls
     url(r'^api/auth/', include(
-        'rest_framework.urls', namespace='rest_framework'))
+        'rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/auth/token/',
+        'rest_framework.authtoken.views.obtain_auth_token')
 )
 
 # handle 404s and 500s in development mode

@@ -176,6 +176,7 @@ INSTALLED_APPS = (
     # third party libs
     'south',
     'rest_framework',
+    'rest_framework.authtoken',
     'taggit',
 )
 
@@ -219,3 +220,15 @@ SOUTH_TESTS_MIGRATE = False
 #LOGIN_REDIRECT_URL = reverse_lazy('home')
 # redirect to / until we have a home view.
 LOGIN_REDIRECT_URL = '/'
+
+# configured rest framework
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.UnicodeJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer'
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
