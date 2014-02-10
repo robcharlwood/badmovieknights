@@ -56,7 +56,9 @@ else:
     }
 
 # configure ssl if production
-PROTOCOL = 'https' if os.getenv('SETTINGS_MODE') == 'prod' else 'http'
+PROTOCOL = 'https' if os.getenv('SETTINGS_MODE') == 'prod' or \
+    os.getenv('SERVER_SOFTWARE', '').startswith(
+        'Google App Engine') else 'http'
 if PROTOCOL == 'https':
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
