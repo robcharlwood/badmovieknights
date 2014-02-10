@@ -56,7 +56,7 @@ else:
     }
 
 # configure ssl if production
-PROTOCOL = 'http' if os.getenv('SETTINGS_MODE') == 'prod' else 'https'
+PROTOCOL = 'https' if os.getenv('SETTINGS_MODE') == 'prod' else 'http'
 if PROTOCOL == 'https':
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
