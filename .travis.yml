@@ -16,7 +16,7 @@ install:
 
 script:
   - export PATH=${PWD}/google_appengine:$PATH
-  - coverage run --omit="*/test* *migrations*" --source=core,blog,api manage.py test core blog api --settings=badmovieknights.travis_settings
+  - coverage run --omit="*/test*" "*migrations*" --source=core,blog,api manage.py test core blog api --settings=badmovieknights.travis_settings
 
 after_success:
   - coveralls
