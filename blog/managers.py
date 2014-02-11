@@ -11,4 +11,10 @@ class EntryManager(models.Manager):
             also only return published entries
         """
         return super(EntryManager, self).get_query_set().select_related(
-            'author').filter(published=True).order_by('-creation_date')
+            'author').order_by('-creation_date')
+
+    def get_published(self):
+        """
+            Return published entries only
+        """
+        return self.filter(published=True)

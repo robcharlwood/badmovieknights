@@ -18,6 +18,15 @@ class EntryViewMixin(object):
     serializer_class = EntrySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        """
+            Return published and unpublished entries
+            for authenticated api calls
+        """
+        if self.request.user.is_authenticated():
+            return Entry.objects.all()
+        return Entry.objects.get_published()
+
     def pre_save(self, obj):
         """
             Force author to the current user on save
