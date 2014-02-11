@@ -23,12 +23,23 @@ class EntryManagerTestCase(TestCase):
             published=False)
 
     def test_get_query_set(self):
-        # should only return published entry by default
-        self.assertEqual(1, len(Entry.objects.all()))
+        # should return both entries by default
+        self.assertEqual(2, len(Entry.objects.all()))
 
         # due to the optimisations made, this should only
         # execute one query as we select related on user
         with self.assertNumQueries(1):
             e = Entry.objects.all()[0]
+            self.assertEqual(self.entry, e)
+            self.assertEqual(e.author.username, 'rob')
+
+    def test_get_published(self):
+        # should only return published entry by default
+        self.assertEqual(1, len(Entry.objects.get_published()))
+
+        # due to the optimisations made, this should only
+        # execute one query as we select related on user
+        with self.assertNumQueries(1):
+            e = Entry.objects.get_published()[0]
             self.assertEqual(self.entry, e)
             self.assertEqual(e.author.username, 'rob')
