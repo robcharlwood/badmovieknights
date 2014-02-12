@@ -175,6 +175,7 @@ INSTALLED_APPS = (
     'core',
     'blog',
     'api',
+    'c3po',
 
     # third party libs
     'south',
