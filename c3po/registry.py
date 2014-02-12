@@ -21,7 +21,7 @@ class C3PORegistry(object):
         self._models = {}
 
     # registration method
-    def register(self, model, trans_class, **options):
+    def register(self, model, trans_class):
         """
             Registers the given model for use with c3po translation system.
             The model should be Model classes, not instances.
@@ -39,11 +39,6 @@ class C3PORegistry(object):
                     self.get_registered_models()
                 )
             )
-
-        # if options supplied create class with those options attached
-        if options:
-            trans_class = type(
-                '%sTranslation' % model.__name__, (trans_class,), options)
 
         # setup translations model
         opts = trans_class(model)
@@ -68,7 +63,7 @@ class C3PORegistry(object):
     def _create_translation_model(self, model, opts):
         """
             Creates a model for storing `model`'s translations based on
-            given registration options class.
+            given registration trans options class.
         """
         attrs = {'__module__': model.__module__}
 
