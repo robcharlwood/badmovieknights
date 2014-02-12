@@ -71,7 +71,7 @@ class C3PORegistry(object):
         class Meta:
             app_label = model._meta.app_label
             db_table = opts.db_table
-            unique_together = (('model_instance', 'language', 'context'))
+            unique_together = (('model_instance', 'language'))
         attrs['Meta'] = Meta
 
         class TranslationMeta:
