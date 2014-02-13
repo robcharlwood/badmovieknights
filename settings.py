@@ -72,6 +72,14 @@ if PROTOCOL == 'https':
 # system time zone.
 TIME_ZONE = 'Europe/London'
 
+# set languages
+_ = lambda s: s
+LANGUAGES = (
+    ('en', _('English')),
+    ('es', _('Spanish')),
+    ('fr', _('French')),
+)
+
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-GB'
@@ -137,8 +145,9 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -175,6 +184,7 @@ INSTALLED_APPS = (
     'core',
     'blog',
     'api',
+    'c3po',
 
     # third party libs
     'south',

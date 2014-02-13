@@ -9,6 +9,8 @@ from markdown import markdown
 
 # import project deps
 from blog.managers import EntryManager
+from c3po.options import ModelTranslationOptions
+from c3po.registry import c3po
 
 
 # entry model
@@ -43,3 +45,16 @@ class Entry(models.Model):
     class Meta:
         verbose_name = _('Entry')
         verbose_name_plural = _('Entries')
+
+
+# define translation options for Entry
+class EntryTranslationOptions(ModelTranslationOptions):
+    """
+        Let's make title and content translatable
+    """
+    attributes = ['title', 'content']
+
+# now we register our model and trans option with c3po
+# c3po is human cyborg relations and is fluent in over
+# 6 million... er 2 languages. :)
+c3po.register(Entry, EntryTranslationOptions)
