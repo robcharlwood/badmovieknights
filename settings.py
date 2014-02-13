@@ -245,3 +245,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
+
+# setup google cloud storage for image uploads
+GCS_BUCKET = '/badmovieknights'
+GCS_URL = 'http://storage.googleapis.com/badmovieknights'
+GCS_DEFAULT_CACHE_CONTROL = 'public, max-age: 7200'
+DEFAULT_FILE_STORAGE = 'core.storage.GoogleCloudStorage'

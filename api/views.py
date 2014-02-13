@@ -1,18 +1,19 @@
 # import lib deps
-from rest_framework.generics import (
-    ListCreateAPIView, RetrieveUpdateDestroyAPIView)
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly, IsAuthenticated)
 
 # import project deps
 from blog.models import Entry
-from api.serializers import EntrySerializer
+from api.serializers import EntrySerializer, EntryTranslationSerializer
 
 
 # entry api view mixin
-class EntryViewMixin(object):
+class EntryViewSet(viewsets.ModelViewSet):
     """
-        Mixin to handle generic functionality
-        between EntryList and EntryDetail API views.
+        API end point to list/retieve/create/put/delete
+        entries. Allows read only when not logged in.
+        Will return unpublished entries to logged in user
     """
     model = Entry
     serializer_class = EntrySerializer
@@ -32,22 +33,27 @@ class EntryViewMixin(object):
             Force author to the current user on save
         """
         obj.author = self.request.user
-        return super(EntryViewMixin, self).pre_save(obj)
+        return super(EntryViewSet, self).pre_save(obj)
 
 
-# entry list view
-class EntryList(EntryViewMixin, ListCreateAPIView):
+# entry translation list view
+class EntryTranslationViewSet(viewsets.ModelViewSet):
     """
-        API end point to list all published entries
-        and create new entries
+        API end point to list/retieve/create/put/delete
+        translations for an entry
     """
-    pass
+    model = Entry._translation_model
+    serializer_class = EntryTranslationSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return self.model.objects.filter(
+            model_instance=self.kwargs['entry_pk'])
 
-# entry detail view
-class EntryDetail(EntryViewMixin, RetrieveUpdateDestroyAPIView):
-    """
-        API end point to retrieve, update or delete an
-        individual entry
-    """
-    pass
+    def pre_save(self, obj):
+        """
+            Force model_instance to point to the correct
+            model instance
+        """
+        obj.model_instance = Entry.objects.get(pk=self.kwargs['entry_pk'])
+        return super(EntryTranslationViewSet, self).pre_save(obj)

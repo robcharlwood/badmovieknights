@@ -1,12 +1,23 @@
 # import django deps
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
+
+# import lib deps
+from rest_framework_nested import routers
 
 # import project deps
-from api.views import EntryDetail, EntryList
+from api.views import EntryViewSet, EntryTranslationViewSet
 
-# set up api urls
+# create api routers
+router = routers.SimpleRouter()
+router.register(r'entry', EntryViewSet)
+translation_router = routers.NestedSimpleRouter(
+    router, r'entry', lookup='entry')
+translation_router.register(
+    r'translations', EntryTranslationViewSet)
+
+# setup the urls
 urlpatterns = patterns(
     '',
-    url(r'^entry/(?P<pk>\d+)/$', EntryDetail.as_view(), name='entry_detail'),
-    url(r'^entry/$', EntryList.as_view(), name='entry_list')
+    url(r'^', include(router.urls)),
+    url(r'^', include(translation_router.urls)),
 )
