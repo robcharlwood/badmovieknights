@@ -65,7 +65,8 @@ class GoogleCloudStorage(Storage):
         try:
             gcs.delete(filename)
         except gcs.NotFoundError:
-            pass
+            raise OSError(
+                u'File does not exist on Google Cloud Storage')
 
     def exists(self, name):
         """

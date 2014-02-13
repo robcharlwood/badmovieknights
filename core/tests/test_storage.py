@@ -50,6 +50,13 @@ class GoogleCloudStorageTestCase(AppEngineStorageTestCase):
         self.storage.delete(file_name)
         self.assertFalse(self.storage.exists(file_name))
 
+    def test_delete_bad_file(self):
+        file_name = 'test_name.txt'
+        file_content = b'test_content'
+        self.storage.save(file_name, ContentFile(file_content))
+        self.assertTrue(self.storage.exists(file_name))
+        self.assertRaises(OSError, self.storage.delete, 'foo')
+
     def test_size(self):
         file_name = 'test_name.txt'
         file_content = b'test_content'
