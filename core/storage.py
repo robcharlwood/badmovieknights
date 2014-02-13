@@ -20,16 +20,12 @@ class GoogleCloudStorage(Storage):
         A file storage backend for django appengine projects
         that uses google's cloud storage
     """
-    def __init__(self, location=None, base_url=None):
+    def __init__(self):
         """
             Grab settings
         """
-        if location is None:
-            location = settings.GCS_BUCKET
-        self.location = location
-        if base_url is None:
-            base_url = settings.GCS_URL
-        self.base_url = base_url
+        self.location = settings.GCS_BUCKET
+        self.base_url = settings.GCS_URL
 
     def _open(self, name, mode='rb'):
         """
