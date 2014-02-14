@@ -10,8 +10,6 @@ builtins:
 libraries:
 - name: django
   version: "1.4"
-- name: PIL
-  version: "1.1.7"
 
 inbound_services:
 - warmup
