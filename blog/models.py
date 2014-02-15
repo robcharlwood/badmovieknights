@@ -20,6 +20,8 @@ class Entry(models.Model):
     """
     author = models.ForeignKey(User)
     title = models.CharField(_('Title'), max_length=255)
+    image = models.ImageField(
+        _('Image'), max_length=255, blank=True, upload_to='images')
     creation_date = models.DateTimeField(
         _('Creation date'), default=timezone.now,
         help_text=_("Used to build the entry's URL."))

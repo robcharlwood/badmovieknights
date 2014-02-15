@@ -60,7 +60,7 @@ def setup_environ():
                     sys.path.insert(0, os.path.join(
                         sdk_path, 'lib', 'django-1.4'))
                 else:
-                    logging('Unsupported library:\n%s\n' % e)
+                    logging.warn('Unsupported library:\n%s\n' % e)
 
             # Extra setup for django
             if library.name == 'django':
