@@ -48,7 +48,7 @@ class GoogleCloudStorage(Storage):
             filename, mode='w',
             content_type=file_type,
             options={
-                'acl': 'public-read',
+                'x-goog-acl': 'public-read',
                 'cache-control': settings.GCS_DEFAULT_CACHE_CONTROL
             })
         content.open()
