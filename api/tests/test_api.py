@@ -58,8 +58,14 @@ class APIEntryListTestCase(BaseEntryAPITestCase):
         self.assertEqual(2, len(returned))
         e1 = returned[0]
         e2 = returned[1]
+
+        # check ids
         self.assertEqual(self.entry_1.id, e1['id'])
         self.assertEqual(self.entry_2.id, e2['id'])
+
+        # test mark down fields are rendered into html
+        self.assertEqual('<h1>My Content</h1>', e1['html_content'])
+        self.assertEqual('<h1>My Content 2</h1>', e2['html_content'])
 
     def test_entry_list_authenticated_200(self):
         # entry list should return published and unpublished items
@@ -108,6 +114,7 @@ class APIEntryDetailTestCase(BaseEntryAPITestCase):
         self.assertEqual(self.entry_1.id, returned['id'])
         self.assertEqual(self.entry_1.title, returned['title'])
         self.assertEqual(self.entry_1.content, returned['content'])
+        self.assertEqual('<h1>My Content</h1>', returned['html_content'])
         self.assertEqual(self.entry_1.published, returned['published'])
 
         # now try and access an unpublished entry
@@ -128,6 +135,7 @@ class APIEntryDetailTestCase(BaseEntryAPITestCase):
         self.assertEqual(self.entry_1.id, returned['id'])
         self.assertEqual(self.entry_1.title, returned['title'])
         self.assertEqual(self.entry_1.content, returned['content'])
+        self.assertEqual('<h1>My Content</h1>', returned['html_content'])
         self.assertEqual(self.entry_1.published, returned['published'])
 
         # try and access an unpublished entry

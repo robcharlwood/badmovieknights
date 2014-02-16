@@ -18,7 +18,11 @@ class EntrySerializer(serializers.ModelSerializer):
         source='translations', read_only=True)
     creation_date = serializers.DateTimeField(read_only=True)
     last_update = serializers.DateTimeField(read_only=True)
+    html_content = serializers.SerializerMethodField('convert_markdown')
 
     class Meta:
         model = Entry
         exclude = ['author']
+
+    def convert_markdown(self, obj):
+        return obj.html_content
