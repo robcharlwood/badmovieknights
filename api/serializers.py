@@ -19,10 +19,28 @@ class EntrySerializer(serializers.ModelSerializer):
     creation_date = serializers.DateTimeField(read_only=True)
     last_update = serializers.DateTimeField(read_only=True)
     html_content = serializers.SerializerMethodField('convert_markdown')
+    author = serializers.SerializerMethodField('get_author')
+    image_full_url = serializers.SerializerMethodField('get_image_url')
 
     class Meta:
         model = Entry
-        exclude = ['author']
 
     def convert_markdown(self, obj):
+        """
+            Convert content markdown field to html
+        """
         return obj.html_content
+
+    def get_author(self, obj):
+        """
+            Return the author of the blog
+        """
+        return obj.author.username
+
+    def get_image_url(self, obj):
+        """
+            Returns a full qualified url for angularjs app
+        """
+        if obj.image:
+            return obj.image.url
+        return ''
