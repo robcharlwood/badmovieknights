@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 # import package deps
 from blog.models import Entry
+from api.fields import TranslationField
 
 
 # entry translations serializer
@@ -33,22 +34,16 @@ class EntryReadOnlySerializer(serializers.ModelSerializer):
     """
         Serializer for standard read-only API calls to entry.
     """
-    translations = serializers.SerializerMethodField('get_translations')
+    title = TranslationField()
+    content = TranslationField(markdown=True)
     creation_date = serializers.DateTimeField(read_only=True)
     last_update = serializers.DateTimeField(read_only=True)
-    content = serializers.SerializerMethodField('convert_markdown')
     author = serializers.SerializerMethodField('get_author')
     image = serializers.SerializerMethodField('get_image_url')
 
     class Meta:
         model = Entry
         exclude = ['published']
-
-    def convert_markdown(self, obj):
-        """
-            Convert content markdown field to html
-        """
-        return obj.html_content
 
     def get_author(self, obj):
         """
@@ -63,19 +58,3 @@ class EntryReadOnlySerializer(serializers.ModelSerializer):
         if obj.image:
             return obj.image.url
         return ''
-
-    def get_translations(self, obj):
-        """
-            Returns a list of translations for the entry
-        """
-        fields = obj._translation_model._transmeta.translatable_fields
-        txs = obj.translations.all()
-        output = []
-        for tx in txs:
-            tx_dict = {'language': tx.language}
-            for tf in fields:
-                tx_dict.update({
-                    tf: getattr(tx, tf)
-                })
-            output.append(tx_dict)
-        return output

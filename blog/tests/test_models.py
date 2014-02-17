@@ -22,12 +22,6 @@ class EntryModelTestCase(TestCase):
         self.assertEqual(self.entry.__unicode__(), '%s - %s' % (
             self.entry.title, self.entry.creation_date))
 
-    def test_html_content_property(self):
-        # test that markdown content stored in the db is converted
-        # into HTML
-        expected_content = u"<h1>This is an H1</h1>"
-        self.assertEqual(expected_content, self.entry.html_content)
-
 
 # test entry translation model
 class EntryTranslationTestCase(TestCase):
