@@ -7,23 +7,42 @@ from blog.models import Entry
 
 # entry translations serializer
 class EntryTranslationSerializer(serializers.ModelSerializer):
+    """
+        entry translations serializer
+    """
     class Meta:
         model = Entry._translation_model
         exclude = ['model_instance']
 
 
-# Entry serializer
+# entry CRUD serializer
 class EntrySerializer(serializers.ModelSerializer):
-    translations = EntryTranslationSerializer(
-        source='translations', read_only=True)
+    """
+        This serializer is rendered for POST/PUT/DELETE
+        requests. The reason for having a seperate admin
+        and read-only serializers is because we need to
+        format and process data differently for admins
+    """
+    class Meta:
+        model = Entry
+        exclude = ['author', 'creation_date', 'last_update']
+
+
+# Entry read only serializer
+class EntryReadOnlySerializer(serializers.ModelSerializer):
+    """
+        Serializer for standard read-only API calls to entry.
+    """
+    translations = serializers.SerializerMethodField('get_translations')
     creation_date = serializers.DateTimeField(read_only=True)
     last_update = serializers.DateTimeField(read_only=True)
-    html_content = serializers.SerializerMethodField('convert_markdown')
+    content = serializers.SerializerMethodField('convert_markdown')
     author = serializers.SerializerMethodField('get_author')
-    image_full_url = serializers.SerializerMethodField('get_image_url')
+    image = serializers.SerializerMethodField('get_image_url')
 
     class Meta:
         model = Entry
+        exclude = ['published']
 
     def convert_markdown(self, obj):
         """
@@ -44,3 +63,19 @@ class EntrySerializer(serializers.ModelSerializer):
         if obj.image:
             return obj.image.url
         return ''
+
+    def get_translations(self, obj):
+        """
+            Returns a list of translations for the entry
+        """
+        fields = obj._translation_model._transmeta.translatable_fields
+        txs = obj.translations.all()
+        output = []
+        for tx in txs:
+            tx_dict = {'language': tx.language}
+            for tf in fields:
+                tx_dict.update({
+                    tf: getattr(tx, tf)
+                })
+            output.append(tx_dict)
+        return output

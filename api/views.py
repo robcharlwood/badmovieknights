@@ -5,7 +5,8 @@ from rest_framework.permissions import (
 
 # import project deps
 from blog.models import Entry
-from api.serializers import EntrySerializer, EntryTranslationSerializer
+from api.serializers import (
+    EntrySerializer, EntryReadOnlySerializer, EntryTranslationSerializer)
 
 
 # entry api view mixin
@@ -18,6 +19,16 @@ class EntryViewSet(viewsets.ModelViewSet):
     model = Entry
     serializer_class = EntrySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_serializer_class(self):
+        """
+            Use a different serializer depending on
+            whether we are getting or creating/updating/deleting
+        """
+        if self.request.method == u'GET' \
+                and not self.request.user.is_authenticated():
+            return EntryReadOnlySerializer
+        return EntrySerializer
 
     def get_queryset(self):
         """

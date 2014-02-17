@@ -64,8 +64,8 @@ class APIEntryListTestCase(BaseEntryAPITestCase):
         self.assertEqual(self.entry_2.id, e2['id'])
 
         # test mark down fields are rendered into html
-        self.assertEqual('<h1>My Content</h1>', e1['html_content'])
-        self.assertEqual('<h1>My Content 2</h1>', e2['html_content'])
+        self.assertEqual('<h1>My Content</h1>', e1['content'])
+        self.assertEqual('<h1>My Content 2</h1>', e2['content'])
 
         # test author field
         self.assertEqual('rob', e1['author'])
@@ -117,10 +117,8 @@ class APIEntryDetailTestCase(BaseEntryAPITestCase):
         returned = json.loads(resp.content)
         self.assertEqual(self.entry_1.id, returned['id'])
         self.assertEqual(self.entry_1.title, returned['title'])
-        self.assertEqual(self.entry_1.content, returned['content'])
-        self.assertEqual('<h1>My Content</h1>', returned['html_content'])
+        self.assertEqual('<h1>My Content</h1>', returned['content'])
         self.assertEqual('rob', returned['author'])
-        self.assertEqual(self.entry_1.published, returned['published'])
 
         # now try and access an unpublished entry
         resp = self.client.get(reverse(
@@ -140,8 +138,7 @@ class APIEntryDetailTestCase(BaseEntryAPITestCase):
         self.assertEqual(self.entry_1.id, returned['id'])
         self.assertEqual(self.entry_1.title, returned['title'])
         self.assertEqual(self.entry_1.content, returned['content'])
-        self.assertEqual('<h1>My Content</h1>', returned['html_content'])
-        self.assertEqual('rob', returned['author'])
+        self.assertEqual('# My Content', returned['content'])
         self.assertEqual(self.entry_1.published, returned['published'])
 
         # try and access an unpublished entry
