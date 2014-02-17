@@ -152,6 +152,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -190,6 +191,7 @@ INSTALLED_APPS = (
     'south',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     'taggit',
 )
 
@@ -245,6 +247,16 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
+
+# configure cors in case I ever want to access the API from elsewhere.
+# this is also very handy in development as it means that I can run
+# this api on localhost:8080 and my angularjs code on a different port
+# and allow API calls to be made from my angularjs app without mocking. :)
+CORS_ORIGIN_WHITELIST = ()
+if DEBUG:
+    CORS_ORIGIN_WHITELIST = CORS_ORIGIN_WHITELIST + (
+        'localhost:8001',
+    )
 
 # setup google cloud storage for image uploads
 GCS_BUCKET = '/badmovieknights'

@@ -36,14 +36,6 @@ class Entry(models.Model):
     def __unicode__(self):
         return u'%s - %s' % (self.title, self.creation_date)
 
-    @property
-    def html_content(self):
-        """
-            Returns the "content" field as HTML.
-            using the markdown library
-        """
-        return markdown(self.content)
-
     class Meta:
         verbose_name = _('Entry')
         verbose_name_plural = _('Entries')

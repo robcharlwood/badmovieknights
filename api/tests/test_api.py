@@ -1,9 +1,11 @@
 # import python deps
 import json
+import datetime
 
 # import django deps
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.utils.timezone import utc
 
 # import projectr deps
 from rest_framework.test import APIClient
@@ -17,6 +19,11 @@ from blog.models import Entry
 class BaseEntryAPITestCase(AppEngineTestCase):
     def setUp(self):
         super(BaseEntryAPITestCase, self).setUp()
+        creation_date_1 = datetime.datetime.utcnow().replace(tzinfo=utc)
+        creation_date_2 = datetime.datetime.utcnow().replace(
+            tzinfo=utc) - datetime.timedelta(hours=13)
+        creation_date_3 = datetime.datetime.utcnow().replace(
+            tzinfo=utc) - datetime.timedelta(hours=15)
         self.client = APIClient()
         self.author = User.objects.create_user(
             username='rob', password='password')
@@ -25,17 +32,20 @@ class BaseEntryAPITestCase(AppEngineTestCase):
             author=self.author,
             title='My Blog Entry',
             content='# My Content',
-            published=True)
+            published=True,
+            creation_date=creation_date_1)
         self.entry_2 = Entry.objects.create(
             author=self.author,
             title='My Blog Entry 2',
             content='# My Content 2',
-            published=True)
+            published=True,
+            creation_date=creation_date_2)
         self.entry_3 = Entry.objects.create(
             author=self.author,
             title='My Blog Entry 3',
             content='# My Content 3',
-            published=False)
+            published=False,
+            creation_date=creation_date_3)
 
         # add translations for entry 1
         self.trans_1 = self.entry_1.translations.create(
@@ -58,8 +68,18 @@ class APIEntryListTestCase(BaseEntryAPITestCase):
         self.assertEqual(2, len(returned))
         e1 = returned[0]
         e2 = returned[1]
+
+        # check ids
         self.assertEqual(self.entry_1.id, e1['id'])
         self.assertEqual(self.entry_2.id, e2['id'])
+
+        # test mark down fields are rendered into html
+        self.assertEqual('<h1>My Content</h1>', e1['content'])
+        self.assertEqual('<h1>My Content 2</h1>', e2['content'])
+
+        # test author field
+        self.assertEqual('rob', e1['author'])
+        self.assertEqual('rob', e2['author'])
 
     def test_entry_list_authenticated_200(self):
         # entry list should return published and unpublished items
@@ -107,8 +127,8 @@ class APIEntryDetailTestCase(BaseEntryAPITestCase):
         returned = json.loads(resp.content)
         self.assertEqual(self.entry_1.id, returned['id'])
         self.assertEqual(self.entry_1.title, returned['title'])
-        self.assertEqual(self.entry_1.content, returned['content'])
-        self.assertEqual(self.entry_1.published, returned['published'])
+        self.assertEqual('<h1>My Content</h1>', returned['content'])
+        self.assertEqual('rob', returned['author'])
 
         # now try and access an unpublished entry
         resp = self.client.get(reverse(
@@ -128,6 +148,7 @@ class APIEntryDetailTestCase(BaseEntryAPITestCase):
         self.assertEqual(self.entry_1.id, returned['id'])
         self.assertEqual(self.entry_1.title, returned['title'])
         self.assertEqual(self.entry_1.content, returned['content'])
+        self.assertEqual('# My Content', returned['content'])
         self.assertEqual(self.entry_1.published, returned['published'])
 
         # try and access an unpublished entry
