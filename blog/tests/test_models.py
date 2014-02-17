@@ -27,3 +27,27 @@ class EntryModelTestCase(TestCase):
         # into HTML
         expected_content = u"<h1>This is an H1</h1>"
         self.assertEqual(expected_content, self.entry.html_content)
+
+
+# test entry translation model
+class EntryTranslationTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='rob', password='password')
+        self.entry = Entry.objects.create(
+            author=self.user,
+            title='Entry Title',
+            content='# This is an H1',
+            published=True)
+        self.trans = self.entry.translations.create(
+            language='es',
+            title='Entry Title ES',
+            content='# This is an H1 ES')
+
+    def test_unicode_method(self):
+        # check unicode is what we expect
+        self.assertEqual(
+            self.trans.__unicode__(),
+            u"translation_model:<class 'blog.models.EntryTranslation'> "
+            "master_model:<class 'blog.models.Entry'> "
+            "master_model_instance_id:%s language:es" % self.entry.pk)
