@@ -6,7 +6,8 @@ from rest_framework.permissions import (
 # import project deps
 from blog.models import Entry
 from api.serializers import (
-    EntrySerializer, EntryReadOnlySerializer, EntryTranslationSerializer)
+    EntrySerializer, EntryImageSerializer,
+    EntryReadOnlySerializer, EntryTranslationSerializer)
 
 
 # entry api view mixin
@@ -28,6 +29,8 @@ class EntryViewSet(viewsets.ModelViewSet):
         if self.request.method == u'GET' \
                 and not self.request.user.is_authenticated():
             return EntryReadOnlySerializer
+        if self.request.method == u'PUT' and len(self.request.FILES) > 0:
+            return EntryImageSerializer
         return EntrySerializer
 
     def get_queryset(self):

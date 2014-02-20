@@ -268,6 +268,40 @@ class APIEntryTranslationListTestCase(BaseEntryAPITestCase):
         self.assertEqual(returned['title'], 'My Blog Entry 2 es')
         self.assertEqual(returned['content'], '# My Content 2 es')
 
+    def test_entry_translation_list_create_duplicate_language(self):
+        # test create translation raises a validation error when we try to
+        # add two translations for the same object with the same language
+        # specified
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        resp = self.client.post(
+            reverse(
+                'badmovieknights_api:entrytranslation-list',
+                kwargs={'entry_pk': self.entry_2.pk}), {
+                    'title': 'My Blog Entry 2 es',
+                    'content': '# My Content 2 es',
+                    'language': 'es',
+                })
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        returned = json.loads(resp.content)
+        self.assertEqual(returned['language'], 'es')
+        self.assertEqual(returned['title'], 'My Blog Entry 2 es')
+        self.assertEqual(returned['content'], '# My Content 2 es')
+
+        # create a duplicate translation for the entry
+        resp = self.client.post(
+            reverse(
+                'badmovieknights_api:entrytranslation-list',
+                kwargs={'entry_pk': self.entry_2.pk}), {
+                    'title': 'My Blog Entry 2 es',
+                    'content': '# My Content 2 es',
+                    'language': 'es',
+                })
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        returned = json.loads(resp.content)
+        self.assertEqual(
+            {u'language': [u'es translation already exists for this entry']},
+            returned)
+
 
 # entry detail test case
 class APIEntryTranslationDetailTestCase(BaseEntryAPITestCase):

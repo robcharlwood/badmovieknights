@@ -20,7 +20,11 @@ class EntryTranslationSerializer(serializers.ModelSerializer):
 
     def validate_language(self, attrs, source):
         """
-            Check we dont already have a translation for this entry
+            Check we dont already have a translation for this entry.
+            This would normally be handled by rest framework standard
+            serializer validation. However, I didn't want to have to
+            pass model instance in my API calls from Angular and wanted
+            the API to auto-detect entry using the nested router urls.
         """
         view = self.context.get('view')
         entry_pk = view.kwargs.get('entry_pk')
@@ -51,6 +55,18 @@ class EntrySerializer(serializers.ModelSerializer):
         model = Entry
         exclude = [
             'author', 'creation_date', 'last_update', 'image']
+
+
+# entry image serializer
+class EntryImageSerializer(serializers.ModelSerializer):
+    """
+        We need to handle image upload with a different serializer
+        due to angularjs being a bit naff with file uploads.
+        TODO: Contribute to angularjs docs on file upload!
+    """
+    class Meta:
+        model = Entry
+        fields = ['image']
 
 
 # Entry read only serializer
