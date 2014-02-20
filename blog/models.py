@@ -4,9 +4,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import User
 
-# import lib deps
-from markdown import markdown
-
 # import project deps
 from blog.managers import EntryManager
 from c3po.options import ModelTranslationOptions

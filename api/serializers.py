@@ -1,6 +1,9 @@
 # import lib deps
 from rest_framework import serializers
 
+# import django deps
+from django.utils.translation import ugettext_lazy as _
+
 # import package deps
 from blog.models import Entry
 from api.fields import TranslationField
@@ -15,6 +18,26 @@ class EntryTranslationSerializer(serializers.ModelSerializer):
         model = Entry._translation_model
         exclude = ['model_instance']
 
+    def validate_language(self, attrs, source):
+        """
+            Check we dont already have a translation for this entry
+        """
+        view = self.context.get('view')
+        entry_pk = view.kwargs.get('entry_pk')
+        trans_pk = view.kwargs.get('pk', None)
+
+        # this check should only be done for new translation objects. :-)
+        if not trans_pk:
+            try:
+                Entry._translation_model.objects.get(
+                    language=attrs[source], model_instance__pk=entry_pk)
+            except Entry._translation_model.DoesNotExist:
+                return attrs
+            raise serializers.ValidationError(
+                _(u"%s translation already exists for this entry" % (
+                    attrs[source])))
+        return attrs
+
 
 # entry CRUD serializer
 class EntrySerializer(serializers.ModelSerializer):
@@ -26,7 +49,8 @@ class EntrySerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Entry
-        exclude = ['author', 'creation_date', 'last_update']
+        exclude = [
+            'author', 'creation_date', 'last_update', 'image']
 
 
 # Entry read only serializer
@@ -36,8 +60,10 @@ class EntryReadOnlySerializer(serializers.ModelSerializer):
     """
     title = TranslationField()
     content = TranslationField(markdown=True)
-    creation_date = serializers.DateTimeField(read_only=True)
-    last_update = serializers.DateTimeField(read_only=True)
+    creation_date = serializers.DateTimeField(
+        format="%d %b %Y", read_only=True)
+    last_update = serializers.DateTimeField(
+        format="%d %b %Y", read_only=True)
     author = serializers.SerializerMethodField('get_author')
     image = serializers.SerializerMethodField('get_image_url')
 
