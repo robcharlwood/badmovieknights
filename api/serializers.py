@@ -57,6 +57,7 @@ class EntrySerializer(serializers.ModelSerializer):
 class EntryReadOnlySerializer(serializers.ModelSerializer):
     """
         Serializer for standard read-only API calls to entry.
+        Formats dates accordingly.
     """
     title = TranslationField()
     content = TranslationField(markdown=True)

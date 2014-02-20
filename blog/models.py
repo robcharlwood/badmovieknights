@@ -13,7 +13,8 @@ from c3po.registry import c3po
 # entry model
 class Entry(models.Model):
     """
-        Blog Entry model
+        Blog Entry model - Keeping it simple as this is my first
+        time with appengine and angularjs
     """
     author = models.ForeignKey(User)
     title = models.CharField(_('Title'), max_length=255)
