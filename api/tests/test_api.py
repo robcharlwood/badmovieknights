@@ -65,9 +65,12 @@ class APIEntryListTestCase(BaseEntryAPITestCase):
         resp = self.client.get(reverse('badmovieknights_api:entry-list'))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         returned = json.loads(resp.content)
-        self.assertEqual(2, len(returned))
-        e1 = returned[0]
-        e2 = returned[1]
+        self.assertEqual(2, returned['count'])
+        self.assertEqual(None, returned['previous'])
+        self.assertEqual(None, returned['next'])
+        self.assertEqual(2, len(returned['results']))
+        e1 = returned['results'][0]
+        e2 = returned['results'][1]
 
         # check ids
         self.assertEqual(self.entry_1.id, e1['id'])
@@ -88,10 +91,13 @@ class APIEntryListTestCase(BaseEntryAPITestCase):
         resp = self.client.get(reverse('badmovieknights_api:entry-list'))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         returned = json.loads(resp.content)
-        self.assertEqual(3, len(returned))
-        e1 = returned[0]
-        e2 = returned[1]
-        e3 = returned[2]
+        self.assertEqual(3, returned['count'])
+        self.assertEqual(None, returned['previous'])
+        self.assertEqual(None, returned['next'])
+        self.assertEqual(3, len(returned['results']))
+        e1 = returned['results'][0]
+        e2 = returned['results'][1]
+        e3 = returned['results'][2]
         self.assertEqual(self.entry_1.id, e1['id'])
         self.assertEqual(self.entry_2.id, e2['id'])
         self.assertEqual(self.entry_3.id, e3['id'])

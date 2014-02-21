@@ -20,6 +20,8 @@ class EntryViewSet(viewsets.ModelViewSet):
     model = Entry
     serializer_class = EntrySerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    paginate_by = 10
+    max_paginate_by = 100
 
     def get_serializer_class(self):
         """
