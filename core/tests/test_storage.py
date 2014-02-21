@@ -68,7 +68,7 @@ class GoogleCloudStorageTestCase(AppEngineStorageTestCase):
         file_content = b'test_content'
         self.storage.save(file_name, ContentFile(file_content))
         self.assertEqual(
-            u'http://storage.googleapis.com/badmovieknights/test_name.txt',
+            u'https://storage.googleapis.com/badmovieknights/test_name.txt',
             self.storage.url(file_name))
 
     def test_url_development(self):
