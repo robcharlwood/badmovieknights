@@ -23,15 +23,36 @@ class EntryViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         """
-            Use a different serializer depending on
-            whether we are getting or creating/updating/deleting
+            If not authenticated return read only serializer regardless
+            of request method.
+
+            If authenticated GET call is made that is not
+            in edit mode then we render the read only serializer
+            (admin preview mode).
+
+            if authenticated PUT call is made with a file upload then
+            we return the entry image serializer
+
+            In all other authenticated calls that haven't been covered
+            above then the standard entry serializer is returned
         """
-        if self.request.method == u'GET' \
-                and not self.request.user.is_authenticated():
-            return EntryReadOnlySerializer
-        if self.request.method == u'PUT' and len(self.request.FILES) > 0:
-            return EntryImageSerializer
-        return EntrySerializer
+        if self.request.user.is_authenticated():
+
+            # authenticated and previewing an entry
+            if self.request.method == u'GET' and \
+                    self.request.GET.get('edit_mode', None) is None:
+                return EntryReadOnlySerializer
+
+            # authenticated and uploading image file
+            if self.request.method == u'PUT' and len(self.request.FILES) > 0:
+                return EntryImageSerializer
+
+            # if we make it here, then we are either POST, DELETE or PUT
+            # (with no image)
+            return EntrySerializer
+
+        # if we get this far we are unauthenticated
+        return EntryReadOnlySerializer
 
     def get_queryset(self):
         """

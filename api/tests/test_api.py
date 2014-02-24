@@ -147,9 +147,7 @@ class APIEntryDetailTestCase(BaseEntryAPITestCase):
         returned = json.loads(resp.content)
         self.assertEqual(self.entry_1.id, returned['id'])
         self.assertEqual(self.entry_1.title, returned['title'])
-        self.assertEqual(self.entry_1.content, returned['content'])
-        self.assertEqual('# My Content', returned['content'])
-        self.assertEqual(self.entry_1.published, returned['published'])
+        self.assertEqual('<h1>My Content</h1>', returned['content'])
 
         # try and access an unpublished entry
         resp = self.client.get(reverse(
@@ -159,8 +157,52 @@ class APIEntryDetailTestCase(BaseEntryAPITestCase):
         returned = json.loads(resp.content)
         self.assertEqual(self.entry_3.id, returned['id'])
         self.assertEqual(self.entry_3.title, returned['title'])
+        self.assertEqual(u'<h1>My Content 3</h1>', returned['content'])
+
+    def test_entry_detail_authenticated_200_in_edit_mode(self):
+        # entry detail should return the entry detail object in edit mode.
+        # this call is made from the angular js app to return the object
+        # in an editable format with unformatted data that can be chucked
+        # into an angularjs form.
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        resp = self.client.get(u'%s?edit_mode=true' % reverse(
+            'badmovieknights_api:entry-detail',
+            kwargs={'pk': self.entry_1.pk}))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        returned = json.loads(resp.content)
+        self.assertEqual(self.entry_1.id, returned['id'])
+        self.assertEqual(self.entry_1.title, returned['title'])
+        self.assertEqual(self.entry_1.content, returned['content'])
+        self.assertEqual(self.entry_1.published, returned['published'])
+
+        # try and access an unpublished entry in edit mode
+        resp = self.client.get(u'%s?edit_mode=true' % reverse(
+            'badmovieknights_api:entry-detail',
+            kwargs={'pk': self.entry_3.pk}))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        returned = json.loads(resp.content)
+        self.assertEqual(self.entry_3.id, returned['id'])
+        self.assertEqual(self.entry_3.title, returned['title'])
         self.assertEqual(self.entry_3.content, returned['content'])
         self.assertEqual(self.entry_3.published, returned['published'])
+
+    def test_entry_detail_200_edit_mode_unauthenticated(self):
+        # entry detail should not return edit mode to unautheticated users
+        resp = self.client.get(u'%s?edit_mode=true' % reverse(
+            'badmovieknights_api:entry-detail',
+            kwargs={'pk': self.entry_1.pk}))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        returned = json.loads(resp.content)
+        self.assertEqual(self.entry_1.id, returned['id'])
+        self.assertEqual(self.entry_1.title, returned['title'])
+        self.assertEqual('<h1>My Content</h1>', returned['content'])
+        self.assertEqual('rob', returned['author'])
+
+        # now try and access an unpublished entry
+        resp = self.client.get(u'%s?edit_mode=true' % reverse(
+            'badmovieknights_api:entry-detail',
+            kwargs={'pk': self.entry_3.pk}))
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_entry_detail_put_unauthenticated(self):
         # test forbidden update if unauthenticated
